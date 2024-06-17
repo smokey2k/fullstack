@@ -1,0 +1,31 @@
+// install typescript globally
+    npm install -g typescript
+
+// 1st time initialization
+    mkdir https-ts-server
+    cd https-ts-server
+
+    // initialize the project and install the necessary TypeScript definitions for Node.js
+    npm init -y
+    npm install --save-dev typescript @types/node nodemon ts-node @types/express
+
+    // Create a TypeScript configuration file
+    npx tsc --init
+
+// after cloning from  repository
+    npm install
+
+// build the project
+    npm run build
+
+// run the project as developement 
+    npm run dev
+
+// run the project as production
+    npm run prod
+
+// git repository
+git config --global user.name "smokey2k"
+git config --global user.email "datas2k@gmail.com"
+git init
+

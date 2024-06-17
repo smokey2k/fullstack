@@ -1,0 +1,69 @@
+# OpenSSL
+# https://wiki.openssl.org/index.php/Binaries
+
+# Add OpenSSL to the PATH environemnt variable
+setx PATH "%PATH%;C:\Program Files\OpenSSL-Win64\bin"
+
+# 2048-bit RSA private key for localhost
+openssl genrsa -out localhost.key 2048
+
+# CSR (Certificate Signing Request)
+# This CSR is what you would submit to a Certificate Authority (CA) to obtain the actual SSL certificate, though for testing purposes, you can self-sign the certificate.
+openssl req -new -key localhost.key -out localhost.csr
+    Country Name (2 letter code) [AU]:HU
+    State or Province Name (full name) [Some-State]:Bacs-Kiskun
+    Locality Name (eg, city) []:Nemesnadudvar
+    Organization Name (eg, company) [Internet Widgits Pty Ltd]:Vertex Furniture LLC
+    Organizational Unit Name (eg, section) []:IT Department
+    Common Name (e.g. server FQDN or YOUR name) []:localhost
+    Email Address []:dani@vertexbutor.hu
+    A challenge password []:vertex
+    An optional company name []:Vertex
+
+# Self-Signed Certificate valid for 365 days
+openssl x509 -req -days 365 -in localhost.csr -signkey localhost.key -out localhost.crt
+
+# Trust the Certificate on your development machine:
+# On macOS, you can add the certificate to your system keychain using Keychain Access and trust it.
+# On Windows, you can install the certificate in the Trusted Root Certification Authorities store via the Microsoft Management Console (mmc).
+# On Linux, the process can vary by distribution, but generally involves adding the certificate to a directory of trusted certificates and updating the certificate store.
+
+# Trust the Certificate in Windows
+# To install a self-signed SSL certificate into the Trusted Root Certification Authorities store on a Windows machine, you can use the Microsoft Management Console (MMC). This process helps your system recognize and trust the certificate, preventing security warnings when accessing your localhost or any other services using the certificate. Here’s a detailed step-by-step guide to doing this:
+
+# Step 1: Open Microsoft Management Console (MMC)
+Open Run Dialog: Press Win + R on your keyboard to open the Run dialog.
+Launch MMC: Type mmc into the Run dialog and press Enter. This will open the Microsoft Management Console. If prompted by User Account Control (UAC), click "Yes" to allow the program to make changes to your computer.
+
+# Step 2: Add the Certificates Snap-in
+Add the Snap-in: In MMC, go to File > Add/Remove Snap-in.
+Select Certificates: From the list of available snap-ins, select “Certificates” and click “Add >”.
+Choose the Certificate Store:
+Select “Computer account” and click “Next”. This option allows you to manage certificates for the entire computer, affecting all users.
+Choose “Local computer” and click “Finish”. This targets the certificate store of the machine you are currently using.
+Close the Snap-in Window: Click “OK” in the Add/Remove Snap-ins window to return to the main MMC window.
+
+# Step 3: Install the Certificate
+Navigate to the Trusted Root Certification Authorities Store:
+In the MMC main window, expand the “Certificates (Local Computer)” tree.
+Navigate to Trusted Root Certification Authorities > Certificates.
+Open the Import Wizard:
+Right-click on the “Certificates” folder under Trusted Root Certification Authorities.
+Navigate to All Tasks > Import… to start the Certificate Import Wizard.
+Import the Certificate:
+Click “Next” on the welcome screen of the Certificate Import Wizard.
+Use the “Browse” button to find and select the .crt file (your self-signed certificate file).
+Make sure the file type dropdown is set to “All Files (.)” if you don’t see your certificate initially.
+Click “Next” after selecting your certificate.
+Ensure that the certificate store is set to “Trusted Root Certification Authorities” and click “Next”.
+Review your settings and click “Finish” to import the certificate.
+Confirmation:
+You should see a confirmation dialog box stating that the import was successful. Click “OK” to close the dialog.
+
+#Step 4: Verify the Installation
+To ensure that the certificate is installed:
+In the MMC, navigate within the Trusted Root Certification Authorities store and look for your certificate. You should be able to see it listed there.
+
+# Step 5: Close MMC
+You can now close the Microsoft Management Console. There’s no need to save the console settings when prompted unless you plan to reuse this same MMC setup frequently.
+By following these steps, your self-signed SSL certificate will be trusted by all applications running on your local machine, including web browsers, which will prevent them from showing security warnings when accessing sites that use this certificate.
